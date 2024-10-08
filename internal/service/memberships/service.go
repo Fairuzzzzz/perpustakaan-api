@@ -3,6 +3,7 @@ package memberships
 import (
 	"context"
 
+	"github.com/Fairuzzzzz/perpustakaan-api/internal/configs"
 	"github.com/Fairuzzzzz/perpustakaan-api/internal/model/memberships"
 )
 
@@ -12,11 +13,13 @@ type membershipsRepository interface {
 }
 
 type service struct {
+	cfg            *configs.Config
 	membershipRepo membershipsRepository
 }
 
-func NewService(membershipsRepo membershipsRepository) *service {
+func NewService(cfg *configs.Config, membershipsRepo membershipsRepository) *service {
 	return &service{
+		cfg:            cfg,
 		membershipRepo: membershipsRepo,
 	}
 }

@@ -1,5 +1,6 @@
 service:
   port: ":8888"
+  secretJWT: "fairuztest"
 
 database:
   dataSourceName: "root:testpassword@tcp(127.0.0.1:3306)/perpustakaan?parseTime=true"

@@ -1,15 +1,16 @@
 package jwt
 
 import (
+	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func CreateToken(id int64, username, secretKey string) (string, error) {
+func CreateToken(role, username, secretKey string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":       id,
 		"username": username,
+		"role":     role,
 		"exp":      time.Now().Add(10 * time.Minute).Unix(),
 	},
 	)
@@ -22,7 +23,7 @@ func CreateToken(id int64, username, secretKey string) (string, error) {
 	return tokenStr, nil
 }
 
-func ValidateToken(tokenStr, secretKey string) (int64, string, error) {
+func ValidateToken(tokenStr, secretKey string) (string, string, error) {
 	key := []byte(secretKey)
 	claims := jwt.MapClaims{}
 
@@ -31,12 +32,17 @@ func ValidateToken(tokenStr, secretKey string) (int64, string, error) {
 	})
 
 	if err != nil {
-		return 0, "", err
+		return "", "", err
 	}
 
 	if !token.Valid {
-		return 0, "", err
+		return "", "", err
 	}
 
-	return int64(claims["id"].(float64)), claims["username"].(string), nil
+	role, okRole := claims["role"].(string)
+	username, okUsername := claims["username"].(string)
+	if !okRole || !okUsername {
+		return "", "", errors.New("invalid token claims")
+	}
+	return role, username, nil
 }

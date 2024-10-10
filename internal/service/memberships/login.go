@@ -27,10 +27,14 @@ func (s *service) Login(ctx context.Context, req memberships.LoginRequest) (stri
 		return "", err
 	}
 
+	role := user.Role
+
 	// Integrasi fungsi generate JWT
-	token, err := jwt.CreateToken(user.ID, user.Username, s.cfg.Service.SecretJWT)
+	token, err := jwt.CreateToken(role, user.Username, s.cfg.Service.SecretJWT)
 	if err != nil {
+		log.Error().Err(err).Msg("Failed to create token")
 		return "", err
 	}
+
 	return token, nil
 }

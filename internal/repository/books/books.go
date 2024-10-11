@@ -59,3 +59,25 @@ func (r *repository) GetAllBook(ctx context.Context, limit, offset int) (books.G
 	}
 	return response, nil
 }
+
+func (r *repository) GetBookByID(ctx context.Context, id int64) (*books.BookModel, error) {
+	query := `SELECT id, title, author, category, publication_year, total_copies, available_copies FROM books WHERE id = ?`
+	row := r.db.QueryRowContext(ctx, query, id)
+
+	var book books.BookModel
+	err := row.Scan(&book.ID, &book.Title, &book.Author, &book.Category, &book.PublicationYear, &book.TotalCopies, &book.AvailableCopies)
+	if err != nil {
+		return nil, err
+	}
+	return &book, nil
+}
+
+func (r *repository) UpdateBook(ctx context.Context, model books.BookModel) error {
+	query := `UPDATE books SET title = ?, author = ?, category = ?, publication_year = ?, total_copies = ?, available_copies = ?, updated_at = ? WHERE id = ?`
+
+	_, err := r.db.ExecContext(ctx, query, model.Title, model.Author, model.Category, model.PublicationYear, model.TotalCopies, model.AvailableCopies, model.UpdatedAt, model.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

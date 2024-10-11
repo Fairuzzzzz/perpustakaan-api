@@ -11,6 +11,8 @@ type bookRepository interface {
 	AddBook(ctx context.Context, model books.BookModel) error
 	DeleteBook(ctx context.Context, title, author string) error
 	GetAllBook(ctx context.Context, limit, offset int) (books.GetAllBookResponse, error)
+	GetBookByID(ctx context.Context, id int64) (*books.BookModel, error)
+	UpdateBook(ctx context.Context, model books.BookModel) error
 }
 
 type service struct {

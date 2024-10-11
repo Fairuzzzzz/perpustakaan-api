@@ -15,6 +15,16 @@ type (
 		Title  string `json:"title"`
 		Author string `json:"author"`
 	}
+
+	UpdateBookRequest struct {
+		ID              int64     `json:"id"`
+		Title           *string   `json:"title"`
+		Author          *string   `json:"author"`
+		Category        *[]string `json:"category"`
+		PublicationYear *string   `json:"publicationYear"`
+		TotalCopies     *int64    `json:"totalCopies"`
+		AvailableCopies *int64    `json:"availableCopies"`
+	}
 )
 
 type (

@@ -10,6 +10,11 @@ type (
 		PublicationYear string   `json:"publicationYear"`
 		TotalCopies     int64    `json:"totalCopies"`
 	}
+
+	DeleteBookRequest struct {
+		Title  string `json:"title"`
+		Author string `json:"author"`
+	}
 )
 
 type (
@@ -23,5 +28,27 @@ type (
 		AvailableCopies int64     `db:"available_copies"`
 		CreatedAt       time.Time `db:"created_at"`
 		UpdatedAt       time.Time `db:"updated_at"`
+	}
+)
+
+type (
+	GetAllBookResponse struct {
+		Data       []Book     `json:"data"`
+		Pagination Pagination `json:"pagination"`
+	}
+
+	Book struct {
+		ID              int64    `json:"id"`
+		Title           string   `json:"title"`
+		Author          string   `json:"author"`
+		Category        []string `json:"category"`
+		PublicationYear string   `json:"publicationYear"`
+		TotalCopies     int64    `json:"totalCopies"`
+		AvailableCopies int64    `json:"availableCopies"`
+	}
+
+	Pagination struct {
+		Limit  int `json:"limit"`
+		Offset int `json:"offset"`
 	}
 )

@@ -10,6 +10,8 @@ import (
 
 type bookService interface {
 	AddBook(ctx context.Context, req books.AddBookRequest) error
+	DeleteBook(ctx context.Context, req books.DeleteBookRequest) error
+	GetAllBook(ctx context.Context, pageSize, pageIndex int) (books.GetAllBookResponse, error)
 }
 
 type Handler struct {
@@ -30,4 +32,6 @@ func (h *Handler) RegisterRoute() {
 	route.Use(middleware.AuthMiddleware())
 	route.Use(middleware.AdminOnly())
 	route.POST("add-book", h.AddBook)
+	route.DELETE("delete-book", h.DeleteBook)
+	route.GET("/", h.GetAllBook)
 }

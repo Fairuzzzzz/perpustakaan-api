@@ -9,6 +9,8 @@ import (
 
 type bookRepository interface {
 	AddBook(ctx context.Context, model books.BookModel) error
+	DeleteBook(ctx context.Context, title, author string) error
+	GetAllBook(ctx context.Context, limit, offset int) (books.GetAllBookResponse, error)
 }
 
 type service struct {

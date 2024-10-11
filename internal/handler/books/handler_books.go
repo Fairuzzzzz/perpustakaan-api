@@ -32,8 +32,8 @@ func (h *Handler) RegisterRoute() {
 	route := h.Group("books")
 	route.Use(middleware.AuthMiddleware())
 	route.Use(middleware.AdminOnly())
-	route.POST("add-book", h.AddBook)
-	route.DELETE("delete-book", h.DeleteBook)
-	route.PUT("update-book", h.UpdateBook)
+	route.POST("/add-book", h.AddBook)
+	route.DELETE("/delete-book", h.DeleteBook)
+	route.PUT("/update-book", h.UpdateBook)
 	route.GET("/", h.GetAllBook)
 }

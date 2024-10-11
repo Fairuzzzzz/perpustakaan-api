@@ -10,6 +10,8 @@ import (
 type membershipsRepository interface {
 	GetUser(ctx context.Context, email, username string) (*memberships.UserModel, error)
 	CreateUser(ctx context.Context, model memberships.UserModel) error
+	DeleteUser(ctx context.Context, email, username string) error
+	GetAllUser(ctx context.Context, limit, offset int) (memberships.GetAllUserResponse, error)
 }
 
 type service struct {

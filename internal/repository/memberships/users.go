@@ -33,3 +33,44 @@ func (r *repository) CreateUser(ctx context.Context, model memberships.UserModel
 	}
 	return nil
 }
+
+func (r *repository) DeleteUser(ctx context.Context, email, username string) error {
+	query := `DELETE FROM users WHERE email = ? AND username = ?`
+	_, err := r.db.ExecContext(ctx, query, email, username)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *repository) GetAllUser(ctx context.Context, limit, offset int) (memberships.GetAllUserResponse, error) {
+	query := `SELECT u.id, u.email, u.username, u.role FROM users u ORDER BY u.updated_at DESC LIMIT ? OFFSET ?`
+
+	var response memberships.GetAllUserResponse
+	rows, err := r.db.QueryContext(ctx, query, limit, offset)
+	if err != nil {
+		return response, err
+	}
+	defer rows.Close()
+
+	data := make([]memberships.User, 0)
+	for rows.Next() {
+		var model memberships.UserModel
+		err := rows.Scan(&model.ID, &model.Email, &model.Username, &model.Role)
+		if err != nil {
+			return response, err
+		}
+		data = append(data, memberships.User{
+			ID:       model.ID,
+			Email:    model.Email,
+			Username: model.Username,
+			Role:     model.Role,
+		})
+	}
+	response.Data = data
+	response.Pagination = memberships.Pagination{
+		Limit:  limit,
+		Offset: offset,
+	}
+	return response, nil
+}

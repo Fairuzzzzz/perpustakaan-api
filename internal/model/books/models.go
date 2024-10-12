@@ -25,6 +25,12 @@ type (
 		TotalCopies     *int64    `json:"totalCopies"`
 		AvailableCopies *int64    `json:"availableCopies"`
 	}
+
+	BorrowBookRequest struct {
+		UserID int64  `json:"-"`
+		Title  string `json:"title"`
+		Author string `json:"author"`
+	}
 )
 
 type (
@@ -60,5 +66,17 @@ type (
 	Pagination struct {
 		Limit  int `json:"limit"`
 		Offset int `json:"offset"`
+	}
+)
+
+type (
+	BorrowModel struct {
+		ID         int64      `db:"id"`
+		UserID     int64      `db:"user_id"`
+		BookID     int64      `db:"book_id"`
+		BorrowDate time.Time  `db:"borrow_date"`
+		DueDate    time.Time  `db:"due_date"`
+		ReturnDate *time.Time `db:"return_date"`
+		IsReturned bool       `db:"is_returned"`
 	}
 )

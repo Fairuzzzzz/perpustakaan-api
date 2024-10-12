@@ -7,8 +7,9 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func CreateToken(role, username, secretKey string) (string, error) {
+func CreateToken(userID int64, role, username, secretKey string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"userID":   userID,
 		"username": username,
 		"role":     role,
 		"exp":      time.Now().Add(10 * time.Minute).Unix(),
@@ -23,7 +24,7 @@ func CreateToken(role, username, secretKey string) (string, error) {
 	return tokenStr, nil
 }
 
-func ValidateToken(tokenStr, secretKey string) (string, string, error) {
+func ValidateToken(tokenStr, secretKey string) (int64, string, string, error) {
 	key := []byte(secretKey)
 	claims := jwt.MapClaims{}
 
@@ -32,17 +33,18 @@ func ValidateToken(tokenStr, secretKey string) (string, string, error) {
 	})
 
 	if err != nil {
-		return "", "", err
+		return 0, "", "", err
 	}
 
 	if !token.Valid {
-		return "", "", err
+		return 0, "", "", err
 	}
 
+	userID, okUserID := claims["userID"].(float64)
 	role, okRole := claims["role"].(string)
 	username, okUsername := claims["username"].(string)
-	if !okRole || !okUsername {
-		return "", "", errors.New("invalid token claims")
+	if !okUserID || !okRole || !okUsername {
+		return 0, "", "", errors.New("invalid token claims")
 	}
-	return role, username, nil
+	return int64(userID), role, username, nil
 }

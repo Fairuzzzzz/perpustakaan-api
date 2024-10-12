@@ -23,13 +23,14 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		role, username, err := jwt.ValidateToken(header, secretJWT)
+		userID, role, username, err := jwt.ValidateToken(header, secretJWT)
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to validate token")
 			c.AbortWithError(http.StatusUnauthorized, err)
 			return
 		}
 
+		c.Set("userID", userID)
 		c.Set("username", username)
 		c.Set("role", role)
 		c.Next()

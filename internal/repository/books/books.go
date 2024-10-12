@@ -2,6 +2,7 @@ package books
 
 import (
 	"context"
+	"database/sql"
 	"strings"
 
 	"github.com/Fairuzzzzz/perpustakaan-api/internal/model/books"
@@ -80,4 +81,28 @@ func (r *repository) UpdateBook(ctx context.Context, model books.BookModel) erro
 		return err
 	}
 	return nil
+}
+
+func (r *repository) BorrowBook(ctx context.Context, model books.BorrowModel) error {
+	query := `INSERT INTO borrows (user_id, book_id, borrow_date, due_date, is_returned, return_date) VALUES (?, ?, ?, ?, ?, ?)`
+	_, err := r.db.ExecContext(ctx, query, model.UserID, model.BookID, model.BorrowDate, model.DueDate, model.IsReturned, model.ReturnDate)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *repository) GetBookByTitleAndAuthor(ctx context.Context, title, author string) (*books.BookModel, error) {
+	query := `SELECT id, title, author, category, publication_year, total_copies, available_copies FROM books WHERE title = ? AND author = ?`
+	row := r.db.QueryRowContext(ctx, query, title, author)
+
+	var book books.BookModel
+	err := row.Scan(&book.ID, &book.Title, &book.Author, &book.Category, &book.PublicationYear, &book.TotalCopies, &book.AvailableCopies)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &book, nil
 }

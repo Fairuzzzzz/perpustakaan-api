@@ -13,6 +13,7 @@ type bookService interface {
 	DeleteBook(ctx context.Context, req books.DeleteBookRequest) error
 	GetAllBook(ctx context.Context, pageSize, pageIndex int) (books.GetAllBookResponse, error)
 	UpdateBook(ctx context.Context, req books.UpdateBookRequest) error
+	BorrowBook(ctx context.Context, req books.BorrowBookRequest) error
 }
 
 type Handler struct {
@@ -31,6 +32,7 @@ func NewHandler(api *gin.Engine, bookSvc bookService) *Handler {
 func (h *Handler) RegisterRoute() {
 	route := h.Group("books")
 	route.Use(middleware.AuthMiddleware())
+	route.POST("/borrow-book", h.BorrowBook)
 	route.Use(middleware.AdminOnly())
 	route.POST("/add-book", h.AddBook)
 	route.DELETE("/delete-book", h.DeleteBook)

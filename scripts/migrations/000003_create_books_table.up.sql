@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS books (
     title VARCHAR(250) NOT NULL,
     author VARCHAR(250) NOT NULL,
     category VARCHAR(250) NOT NULL,
-    publication_year TIMESTAMP NOT NULL,
+    publication_year DATE NOT NULL,
     total_copies INT NOT NULL,
     available_copies INT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

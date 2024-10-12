@@ -13,6 +13,8 @@ type bookRepository interface {
 	GetAllBook(ctx context.Context, limit, offset int) (books.GetAllBookResponse, error)
 	GetBookByID(ctx context.Context, id int64) (*books.BookModel, error)
 	UpdateBook(ctx context.Context, model books.BookModel) error
+	GetBookByTitleAndAuthor(ctx context.Context, title, author string) (*books.BookModel, error)
+	BorrowBook(ctx context.Context, model books.BorrowModel) error
 }
 
 type service struct {

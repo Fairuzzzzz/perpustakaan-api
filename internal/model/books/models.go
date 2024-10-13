@@ -31,6 +31,12 @@ type (
 		Title  string `json:"title"`
 		Author string `json:"author"`
 	}
+
+	ReturnBookRequest struct {
+		UserID int64  `json:"-"`
+		Title  string `json:"title"`
+		Author string `json:"author"`
+	}
 )
 
 type (

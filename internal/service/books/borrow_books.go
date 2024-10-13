@@ -39,10 +39,7 @@ func (s *service) BorrowBook(ctx context.Context, req books.BorrowBookRequest) e
 		return err
 	}
 
-	book.AvailableCopies -= 1
-
-	log.Info().Int64("availableCopies", book.AvailableCopies).Msg("Updating availableCopies")
-	err = s.bookRepo.UpdateBook(ctx, *book)
+	err = s.bookRepo.DecrementAvailableCopies(ctx, book.ID)
 	if err != nil {
 		log.Error().Err(err).Msg("error updating book in repository")
 		return err

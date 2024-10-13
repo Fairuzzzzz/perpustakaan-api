@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"strings"
+	"time"
 
 	"github.com/Fairuzzzzz/perpustakaan-api/internal/model/books"
 )
@@ -92,6 +93,15 @@ func (r *repository) BorrowBook(ctx context.Context, model books.BorrowModel) er
 	return nil
 }
 
+func (r *repository) ReturnBook(ctx context.Context, userID, bookID int64) error {
+	query := `UPDATE borrows SET is_returned = ?, return_date = ? WHERE user_id = ? AND book_id = ? AND is_returned = ?`
+	_, err := r.db.ExecContext(ctx, query, true, time.Now(), userID, bookID, false)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *repository) GetBookByTitleAndAuthor(ctx context.Context, title, author string) (*books.BookModel, error) {
 	query := `SELECT id, title, author, category, publication_year, total_copies, available_copies FROM books WHERE title = ? AND author = ?`
 	row := r.db.QueryRowContext(ctx, query, title, author)
@@ -105,4 +115,22 @@ func (r *repository) GetBookByTitleAndAuthor(ctx context.Context, title, author 
 		return nil, err
 	}
 	return &book, nil
+}
+
+func (r *repository) DecrementAvailableCopies(ctx context.Context, bookID int64) error {
+	query := `UPDATE books SET available_copies = available_copies - 1 WHERE id = ?`
+	_, err := r.db.ExecContext(ctx, query, bookID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *repository) IncrementAvailableCopies(ctx context.Context, bookID int64) error {
+	query := `UPDATE books SET available_copies = available_copies + 1 WHERE id = ?`
+	_, err := r.db.ExecContext(ctx, query, bookID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

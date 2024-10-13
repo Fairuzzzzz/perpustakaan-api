@@ -15,6 +15,9 @@ type bookRepository interface {
 	UpdateBook(ctx context.Context, model books.BookModel) error
 	GetBookByTitleAndAuthor(ctx context.Context, title, author string) (*books.BookModel, error)
 	BorrowBook(ctx context.Context, model books.BorrowModel) error
+	DecrementAvailableCopies(ctx context.Context, bookID int64) error
+	ReturnBook(ctx context.Context, userID, bookID int64) error
+	IncrementAvailableCopies(ctx context.Context, bookID int64) error
 }
 
 type service struct {

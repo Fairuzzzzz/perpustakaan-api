@@ -14,6 +14,7 @@ type bookService interface {
 	GetAllBook(ctx context.Context, pageSize, pageIndex int) (books.GetAllBookResponse, error)
 	UpdateBook(ctx context.Context, req books.UpdateBookRequest) error
 	BorrowBook(ctx context.Context, req books.BorrowBookRequest) error
+	ReturnBook(ctx context.Context, req books.ReturnBookRequest) error
 }
 
 type Handler struct {
@@ -33,6 +34,7 @@ func (h *Handler) RegisterRoute() {
 	route := h.Group("books")
 	route.Use(middleware.AuthMiddleware())
 	route.POST("/borrow-book", h.BorrowBook)
+	route.POST("/return-book", h.ReturnBook)
 	route.Use(middleware.AdminOnly())
 	route.POST("/add-book", h.AddBook)
 	route.DELETE("/delete-book", h.DeleteBook)

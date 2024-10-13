@@ -29,11 +29,12 @@ func (s *service) UpdateBook(ctx context.Context, req books.UpdateBookRequest) e
 	}
 
 	if req.PublicationYear != nil {
-		if err := validatePublicationYear(*req.PublicationYear); err != nil {
+		formattedDate, err := validateAndFormatPublicationYear(*req.PublicationYear)
+		if err != nil {
 			log.Error().Str("year", *req.PublicationYear).Msg(err.Error())
 			return err
 		}
-		existingBook.PublicationYear = *req.PublicationYear
+		existingBook.PublicationYear = formattedDate
 	}
 
 	if req.TotalCopies != nil {

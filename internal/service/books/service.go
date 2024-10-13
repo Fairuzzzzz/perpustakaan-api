@@ -18,6 +18,7 @@ type bookRepository interface {
 	DecrementAvailableCopies(ctx context.Context, bookID int64) error
 	ReturnBook(ctx context.Context, userID, bookID int64) error
 	IncrementAvailableCopies(ctx context.Context, bookID int64) error
+	GetAllBorrowedBook(ctx context.Context, limit, offset int) (books.GetAllBorrowedBookResponse, error)
 }
 
 type service struct {

@@ -59,6 +59,20 @@ type (
 		Pagination Pagination `json:"pagination"`
 	}
 
+	GetAllBorrowedBookResponse struct {
+		Data       []BorrowedBook `json:"data"`
+		Pagination Pagination     `json:"pagination"`
+	}
+
+	BorrowedBook struct {
+		ID         int64     `json:"id"`
+		Username   string    `json:"username"`
+		Title      string    `json:"title"`
+		Author     string    `json:"author"`
+		BorrowDate time.Time `json:"borrowDate"`
+		DueDate    time.Time `json:"dueDate"`
+	}
+
 	Book struct {
 		ID              int64    `json:"id"`
 		Title           string   `json:"title"`

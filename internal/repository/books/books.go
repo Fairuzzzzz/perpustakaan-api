@@ -134,3 +134,37 @@ func (r *repository) IncrementAvailableCopies(ctx context.Context, bookID int64)
 	}
 	return nil
 }
+
+func (r *repository) GetAllBorrowedBook(ctx context.Context, limit, offset int) (books.GetAllBorrowedBookResponse, error) {
+	query := `SELECT b.id, u.username, b.title, b.author, br.borrow_date, br.due_date FROM books b JOIN borrows br on b.id = br.book_id JOIN users u on br.user_id = u.id WHERE br.is_returned = false ORDER BY br.borrow_date DESC LIMIT ? OFFSET ?`
+
+	var response books.GetAllBorrowedBookResponse
+	rows, err := r.db.QueryContext(ctx, query, limit, offset)
+	if err != nil {
+		return response, err
+	}
+	defer rows.Close()
+
+	data := make([]books.BorrowedBook, 0)
+	for rows.Next() {
+		var borrow books.BorrowedBook
+		err := rows.Scan(&borrow.ID, &borrow.Username, &borrow.Title, &borrow.Author, &borrow.BorrowDate, &borrow.DueDate)
+		if err != nil {
+			return response, err
+		}
+		data = append(data, books.BorrowedBook{
+			ID:         borrow.ID,
+			Username:   borrow.Username,
+			Title:      borrow.Title,
+			Author:     borrow.Author,
+			BorrowDate: borrow.BorrowDate,
+			DueDate:    borrow.DueDate,
+		})
+	}
+	response.Data = data
+	response.Pagination = books.Pagination{
+		Limit:  limit,
+		Offset: offset,
+	}
+	return response, nil
+}

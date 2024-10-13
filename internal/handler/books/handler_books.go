@@ -15,6 +15,7 @@ type bookService interface {
 	UpdateBook(ctx context.Context, req books.UpdateBookRequest) error
 	BorrowBook(ctx context.Context, req books.BorrowBookRequest) error
 	ReturnBook(ctx context.Context, req books.ReturnBookRequest) error
+	GetAllBorrowedBook(ctx context.Context, pageSize, pageIndex int) (books.GetAllBorrowedBookResponse, error)
 }
 
 type Handler struct {
@@ -40,4 +41,5 @@ func (h *Handler) RegisterRoute() {
 	route.DELETE("/delete-book", h.DeleteBook)
 	route.PUT("/update-book", h.UpdateBook)
 	route.GET("/", h.GetAllBook)
+	route.GET("/borrowed-book", h.GetAllBorrowedBook)
 }

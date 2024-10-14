@@ -3,6 +3,7 @@ package memberships
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	"github.com/Fairuzzzzz/perpustakaan-api/internal/model/memberships"
 )
@@ -73,4 +74,29 @@ func (r *repository) GetAllUser(ctx context.Context, limit, offset int) (members
 		Offset: offset,
 	}
 	return response, nil
+}
+
+func (r *repository) GetBorrowHistory(ctx context.Context, userID int64) ([]memberships.BorrowHistory, error) {
+	query := `SELECT u.username, b.id, b.title, b.author, br.borrow_date, br.due_date, br.return_date, br.is_returned FROM books b JOIN borrows br ON br.book_id = b.id JOIN users u ON br.user_id = u.id WHERE br.user_id = ? ORDER BY br.borrow_date DESC`
+
+	rows, err := r.db.QueryContext(ctx, query, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var history []memberships.BorrowHistory
+	for rows.Next() {
+		var borrow memberships.BorrowHistory
+		var returnDate *time.Time
+
+		err := rows.Scan(&borrow.Username, &borrow.BookID, &borrow.Title, &borrow.Author, &borrow.BorrowDate, &borrow.DueDate, &returnDate, &borrow.IsReturned)
+		if err != nil {
+			return nil, err
+		}
+
+		borrow.ReturnDate = returnDate
+		history = append(history, borrow)
+	}
+	return history, nil
 }

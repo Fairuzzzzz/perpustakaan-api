@@ -12,6 +12,7 @@ type membershipsRepository interface {
 	CreateUser(ctx context.Context, model memberships.UserModel) error
 	DeleteUser(ctx context.Context, email, username string) error
 	GetAllUser(ctx context.Context, limit, offset int) (memberships.GetAllUserResponse, error)
+	GetBorrowHistory(ctx context.Context, userID int64) ([]memberships.BorrowHistory, error)
 }
 
 type service struct {

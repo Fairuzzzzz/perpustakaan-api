@@ -13,6 +13,7 @@ type membershipService interface {
 	Login(ctx context.Context, req memberships.LoginRequest) (string, error)
 	DeleteUsers(ctx context.Context, req memberships.DeleteUserRequest) error
 	GetAllUser(ctx context.Context, pageSize, pageIndex int) (memberships.GetAllUserResponse, error)
+	GetBorrowHistory(ctx context.Context, userID int64) ([]memberships.BorrowHistory, error)
 }
 
 type Handler struct {
@@ -36,4 +37,5 @@ func (h *Handler) RegisterRoute() {
 	route.Use(middleware.AdminOnly())
 	route.DELETE("/delete-user", h.DeleteUser)
 	route.GET("/", h.GetAllUser)
+	route.GET("/:userID/borrow-history", h.GetAllBorrowHistory)
 }

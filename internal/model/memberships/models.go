@@ -52,3 +52,14 @@ type (
 		Offset int `json:"offset"`
 	}
 )
+
+type BorrowHistory struct {
+	Username   string     `json:"username"`
+	BookID     int64      `json:"bookID"`
+	Title      string     `json:"title"`
+	Author     string     `json:"author"`
+	BorrowDate time.Time  `json:"borrowDate"`
+	DueDate    time.Time  `json:"dueDate"`
+	ReturnDate *time.Time `json:"returnDate"`
+	IsReturned bool       `json:"isReturned"`
+}

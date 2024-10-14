@@ -67,6 +67,7 @@ Berikut adalah daftar endpoint yang tersedia dalam Perpustakaan API :
 | POST        | `/membership/login`          | Login anggota                              | Tidak       | -         |
 | DELETE      | `/membership/delete-user`    | Menghapus anggota                          | Ya          | Admin     |
 | GET         | `/membership/`               | Mendapatkan daftar semua anggota           | Ya          | Admin     |
+| GET         | `/membership/:userID/borrow-history`| Mendapatkan riwayat peminjaman buku | Ya          | Admin     |
 
 ### Contoh Request dan Response
 

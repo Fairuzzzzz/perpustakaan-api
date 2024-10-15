@@ -35,7 +35,6 @@ docker-compose up -d
 
 3. Database Migration
 ```bash
-make migrate-create
 make migrate-up
 ```
 
